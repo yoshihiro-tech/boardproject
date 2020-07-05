@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block customcss %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+{% endblock customcss %}
 
 {% block content %}
-
     <form class="form-signin" method="POST" action="">{% csrf_token %}
         <img class="mb-4" src="/docs/4.5/assets/brand/bootstrap-solid.svg"
              alt="" width="72" height="72">
@@ -21,5 +25,4 @@
         </button>
         <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
     </form>
-
 {% endblock content %}

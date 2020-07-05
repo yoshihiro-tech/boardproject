@@ -3,6 +3,9 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+
+from boardapp.models import BoardModel
 
 
 def signupfunc(request):
@@ -26,11 +29,13 @@ def loginfunc(request):
                             password=new_password)
         if user is not None:
             login(request, user)
-            return redirect('signup')
+            return redirect('list')
         else:
             return redirect('login')
     return render(request, 'login.html')
 
 
+@login_required()
 def listfunc(request):
-    return render(request, 'list.html')
+    object_list = BoardModel.objects.all()
+    return render(request, 'list.html', {'object_list': object_list})
