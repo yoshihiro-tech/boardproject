@@ -3,7 +3,9 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+
 
 from boardapp.models import BoardModel
 
@@ -39,3 +41,20 @@ def loginfunc(request):
 def listfunc(request):
     object_list = BoardModel.objects.all()
     return render(request, 'list.html', {'object_list': object_list})
+
+
+def logoutfunc(request):
+    logout(request)
+    return redirect('login')
+
+
+def detailfunc(request, pk):
+    object = BoardModel.objects.get(pk=pk)
+    return render(request, 'detail.html', {'object': object})
+
+
+def goodfunc(request, pk):
+    post = BoardModel.objects.get(pk=pk)
+    post.good = post.good + 1
+    post.save()
+    return redirect('list')
