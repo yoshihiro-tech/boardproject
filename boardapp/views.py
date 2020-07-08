@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.generic import CreateView
+from django.urls import reverse_lazy
 
 
 from boardapp.models import BoardModel
@@ -52,6 +54,25 @@ def detailfunc(request, pk):
 
 def goodfunc(request, pk):
     post = BoardModel.objects.get(pk=pk)
-    post.good = post.good + 1
+    post.good += 1
     post.save()
     return redirect('list')
+
+
+def readfunc(request, pk):
+    post = BoardModel.objects.get(pk=pk)
+    login_username = request.user.get_username()
+    if login_username in post.readtext:
+        return redirect('list')
+    else:
+        post.read += 1
+        post.readtext = post.readtext + ' ' + login_username
+        post.save()
+        return redirect('list')
+
+
+class BoardCreate(CreateView):
+    template_name = 'create.html'
+    model = BoardModel
+    fields = ('title', 'content', 'author', 'images')
+    success_url = reverse_lazy('list')
